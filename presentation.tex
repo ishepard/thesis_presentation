@@ -20,6 +20,7 @@
 \usepackage{lmodern}
 \usepackage[ruled,vlined]{algorithm2e}
 \usepackage{subcaption}
+\usepackage{appendixnumberbeamer}
 
 \mode<presentation> {
 
@@ -216,76 +217,6 @@ Wormhole Peer Sampling Service!
 \end{figure}
 
 \end{frame}
-
-%-----------------------------------------------------------------------------------------------------------------------------
-\subsection{WPSS: The algorithm}
-% \renewcommand{\thealgocf}{}
-
-\begin{frame}[fragile] % Need to use the fragile option when verbatim is used in the slide
-\frametitle{The algorithm}
-
-\begin{algorithm}[H]
-  \SetKwProg{Upon}{upon}{ do}{end}
-  \SetKwProg{Every}{every}{ do}{end}
-
-  \Upon{wormholeFailure}{
-  	$wormhole \leftarrow tracker.getNewWormhole()$\;
-    $connect(wormhole)$\;
-  }
-
-  \Upon{baseOverlayFailure}{
-  	$peer \leftarrow tracker.getNewPeer()$\;
-  	$connect(peer)$
-  }
- \caption{Wormhole peer sampling}
-\end{algorithm}
-
-\end{frame}
-
-\begin{frame}[fragile] % Need to use the fragile option when verbatim is used in the slide
-\frametitle{The algorithm}
-
-\begin{algorithm}[H]
-  \SetKwProg{Upon}{upon}{ do}{end}
-  \SetKwProg{Every}{every}{ do}{end}
-
-  \Every{$\Delta_{wh}$ = wormholeTimeout}{
-    $disconnect(wormhole)$\;
-  	$wormhole \leftarrow tracker.getNewWormhole()$\;
-    $connect(wormhole)$\;
-  }
-
-  \Every{$\Delta$ = adTimeout}{
-  	$ad \leftarrow createAd()$\;
-  	$ad.hops \leftarrow 1$\;
-  	$sendAdToWormhole(wormhole, ad)$\;
-  }
-  \caption{Wormhole peer sampling}
-\end{algorithm}
-
-\end{frame}
-  
-\begin{frame}
-\frametitle{The algorithm}
-    
-\begin{algorithm}[H]
-  \SetKwProg{Upon}{upon}{ do}{end}
-  \SetKwProg{Every}{every}{ do}{end}
-
-  \Upon{receivedAd(ad)}{
-  	\If{ad.hop = getTTL() $\mid\mid$ acceptAd(ad)}{
-  		view.addAd(ad)
-  	}\Else{
-  		$neighbour \leftarrow getMetropolisHastingsNeighbour()$\;
-  		$ad.hop \leftarrow ad.hop + 1$\;
-  		$sendAd(neighbour, ad)$\;
-  	}
-  }
-  \caption{Wormhole peer sampling}
-\end{algorithm}
-\end{frame}
-
-
 
 %-----------------------------------------------------------------------------------------------------------------------------
 \section{WebRTC}
@@ -709,5 +640,72 @@ In a practical setting, this value can characterize any aspect of the node or it
 \end{frame}
 
 %-----------------------------------------------------------------------------------------------------------------------------
+
+\appendix
+
+\begin{frame}[fragile] % Need to use the fragile option when verbatim is used in the slide
+\frametitle{The algorithm}
+
+\begin{algorithm}[H]
+  \SetKwProg{Upon}{upon}{ do}{end}
+  \SetKwProg{Every}{every}{ do}{end}
+
+  \Upon{wormholeFailure}{
+    $wormhole \leftarrow tracker.getNewWormhole()$\;
+    $connect(wormhole)$\;
+  }
+
+  \Upon{baseOverlayFailure}{
+    $peer \leftarrow tracker.getNewPeer()$\;
+    $connect(peer)$
+  }
+ \caption{Wormhole peer sampling}
+\end{algorithm}
+
+\end{frame}
+
+\begin{frame}[fragile] % Need to use the fragile option when verbatim is used in the slide
+\frametitle{The algorithm}
+
+\begin{algorithm}[H]
+  \SetKwProg{Upon}{upon}{ do}{end}
+  \SetKwProg{Every}{every}{ do}{end}
+
+  \Every{$\Delta_{wh}$ = wormholeTimeout}{
+    $disconnect(wormhole)$\;
+    $wormhole \leftarrow tracker.getNewWormhole()$\;
+    $connect(wormhole)$\;
+  }
+
+  \Every{$\Delta$ = adTimeout}{
+    $ad \leftarrow createAd()$\;
+    $ad.hops \leftarrow 1$\;
+    $sendAdToWormhole(wormhole, ad)$\;
+  }
+  \caption{Wormhole peer sampling}
+\end{algorithm}
+
+\end{frame}
+  
+\begin{frame}
+\frametitle{The algorithm}
+    
+\begin{algorithm}[H]
+  \SetKwProg{Upon}{upon}{ do}{end}
+  \SetKwProg{Every}{every}{ do}{end}
+
+  \Upon{receivedAd(ad)}{
+    \If{ad.hop = getTTL() $\mid\mid$ acceptAd(ad)}{
+      view.addAd(ad)
+    }\Else{
+      $neighbour \leftarrow getMetropolisHastingsNeighbour()$\;
+      $ad.hop \leftarrow ad.hop + 1$\;
+      $sendAd(neighbour, ad)$\;
+    }
+  }
+  \caption{Wormhole peer sampling}
+\end{algorithm}
+\end{frame}
+
 
 \end{document} 
