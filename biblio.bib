@@ -1,0 +1,48 @@
+@inproceedings{wormhole,
+abstract = {State of the art gossip protocols for the Internet are based on the assumption that connection establishment between peers comes at negligible cost. Our experience with commercially deployed P2P systems has shown that this cost is much higher than generally assumed. As such, peer sampling services often cannot provide fresh samples because the service would require too high a connection establishment rate. In this paper, we present the wormhole-based peer sampling service (WPSS). WPSS over-comes the limitations of existing protocols by executing short random walks over a stable topology and by using shortcuts (wormholes), thus limiting the rate of connection establishments and guaranteeing freshness of samples, respectively. We show that our approach can decrease the connection establishment rate by one order of magnitude compared to the state of the art while providing the same levels of freshness of samples. This, without sacrificing the desirable properties of a PSS for the Internet, such as robustness to churn and NAT-friendliness. We support our claims with a thorough measurement study in our deployed commercial system as well as in simulation.},
+author = {Roverso, Roberto and Dowling, Jim and Jelasity, Mark},
+booktitle = {IEEE P2P 2013 Proceedings},
+doi = {10.1109/P2P.2013.6688707},
+file = {:Users/shepard/Desktop/06688707.pdf:pdf},
+isbn = {978-1-4799-0515-7},
+keywords = {NAT-resilient gossip protocols,P2P Networks,Peer Sampling},
+month = sep,
+pages = {1--10},
+publisher = {IEEE},
+title = {{Through the wormhole: Low cost, fresh peer sampling for the Internet}},
+url = {http://ieeexplore.ieee.org/lpdocs/epic03/wrapper.htm?arnumber=6688707},
+year = {2013}
+}
+
+@incollection{gozar,
+abstract = {Gossip-based peer sampling protocols have been widely used as a building block for many large-scale distributed applications. However, Network Address Translation gateways (NATs) cause most existing gossiping protocols to break down, as nodes cannot establish direct connections to nodes behind NATs (private nodes). In addition, most of the existing NAT traversal algorithms for establishing connectivity to private nodes rely on third party servers running at a well-known, public IP addresses. In this paper, we present Gozar, a gossip-based peer sampling service that: (i) provides uniform random samples in the presence of NATs, and (ii) enables direct connectivity to sampled nodes using a fully distributed NAT traversal service, where connection messages require only a single hop to connect to private nodes. We show in simulation that Gozar preserves the randomness properties of a gossip-based peer sampling service. We show the robustness of Gozar when a large fraction of nodes reside behind NATs and also in catastrophic failure scenarios. For example, if 80{\%} of nodes are behind NATs, and 80{\%} of the nodes fail, more than 92{\%} of the remaining nodes stay connected. In addition, we compare Gozar with existing NAT-friendly gossip-based peer sampling services, Nylon and ARRG. We show that Gozar is the only system that supports one-hop NAT traversal, and its overhead is roughly half of Nylon’s.},
+author = {Payberah, Amir H. and Dowling, Jim and Haridi, Seif},
+booktitle = {Lecture Notes in Computer Science (including subseries Lecture Notes in Artificial Intelligence and Lecture Notes in Bioinformatics)},
+doi = {10.1007/978-3-642-21387-8{\_}1},
+file = {:Users/shepard/Documents/University of Trento/Thesis/thesis/documents/gozar.pdf:pdf},
+isbn = {9783642213861},
+issn = {03029743},
+pages = {1--14},
+title = {{Gozar: NAT-Friendly Peer Sampling with One-Hop Distributed NAT Traversal}},
+url = {http://link.springer.com/10.1007/978-3-642-21387-8{\_}1},
+volume = {6723 LNCS},
+year = {2011}
+}
+
+
+@inproceedings{croupier,
+abstract = {Despite much recent research on peer-to-peer (P2P) protocols for the Internet, there have been relatively few practical protocols designed to explicitly account for Network Address Translation gateways (NATs). Those P2P protocols that do handle NATs circumvent them using relaying and hole-punching techniques to route packets to nodes residing behind NATs. In this paper, we present Croupier, a peer sampling service (PSS) that provides uniform random samples of nodes in the presence of NATs in the network. It is the first NAT-aware PSS that works without the use of relaying or hole-punching. By removing the need for relaying and hole-punching, we decrease the complexity and overhead of our protocol as well as increase its robustness to churn and failure. We evaluated Croupier in simulation, and, in comparison with existing NAT-aware PSS', our results show similar randomness properties, but improved robustness in the presence of both high percentages of nodes behind NATs and massive node failures. Croupier also has substantially lower protocol overhead.},
+author = {Dowling, Jim and Payberah, Amir H.},
+booktitle = {2012 IEEE 32nd International Conference on Distributed Computing Systems},
+doi = {10.1109/ICDCS.2012.19},
+file = {:Users/shepard/Documents/University of Trento/Thesis/thesis/documents/croupier.pdf:pdf},
+isbn = {978-1-4577-0295-2},
+issn = {1063-6927},
+keywords = {Gossip peer sampling,NAT,P2P networks},
+month = jun,
+pages = {102--111},
+publisher = {IEEE},
+title = {{Shuffling with a Croupier: Nat-Aware Peer-Sampling}},
+url = {http://ieeexplore.ieee.org/lpdocs/epic03/wrapper.htm?arnumber=6257983},
+year = {2012}
+}

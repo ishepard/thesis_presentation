@@ -96,7 +96,7 @@
 {
 University of Trento \\ % Your institution for the title page
 \medskip
-\textit{davide.spadini@unitn.it} % Your email address
+\textit{davide.spadini@studenti.unitn.it} % Your email address
 }
 \date{\today} % Date, can be changed to a custom date
 
@@ -132,7 +132,7 @@ A peer sampling service (PSS) is a service that runs on all the nodes in a distr
 
 
 \begin{frame}
-\frametitle{The idea}
+\frametitle{P2P networks}
 \begin{columns}[t] % The "c" option specifies centered vertical alignment while the "t" option is used for top vertical alignment
 
 \column{.5\textwidth} % Left column and width
@@ -150,7 +150,8 @@ A peer sampling service (PSS) is a service that runs on all the nodes in a distr
 \item Dynamic network
 \item Nodes have {\color{red}{partial}} view of the network
 \end{enumerate}
-\end{columns}\end{frame}
+\end{columns}
+\end{frame}
 
 
 \begin{frame}
@@ -174,13 +175,13 @@ A PSS can be implemented:
 	\item Network Address Translation (NAT)
 	\item Firewall
 	\item Antivirus
-	\item etc etc..
+	\item etc..
 \end{itemize}
 
 \pause
 \textbf{Solution:}
 
-Gossip-based NAT-aware Peer Sampling Service
+Gossip-based NAT-aware Peer Sampling Service~\cite{gozar}~\cite{croupier}
 
 
 \column{.5\textwidth} % Right column and width
@@ -192,18 +193,27 @@ Gossip-based NAT-aware Peer Sampling Service
 \pause
 \textbf{Solution:}
 
-Wormhole Peer Sampling Service!
+Wormhole Peer Sampling Service!~\cite{wormhole}
 
 \end{columns}
 \end{frame}
 
 %-----------------------------------------------------------------------------------------------------------------------------
 \subsection{WPSS}
+\frametitle{Wormhole peer sampling service}
 
 \begin{frame}
 \begin{itemize}
+  \item It has the same properties of other PSSes 
+  \begin{itemize}
+    \item Samples' freshness
+    \item Randomness
+    \item Robustness
+    \item etc...
+  \end{itemize}
+  \item The connection establishment rate is decreased by one order of magnitude
 	\item Published in 2013
-	\item It has the same levels of samples' freshness  of the other PSSes, while the connection establishment rate is decreased by one order of magnitude
+  \item It has not been released a final version yet
 	\pause
 	\item \textbf{Main idea}: to divide the service into two layers
 \end{itemize}
@@ -218,6 +228,22 @@ Wormhole Peer Sampling Service!
 
 \end{frame}
 
+\begin{frame}
+\frametitle{Wormhole overlay}
+
+\begin{itemize}
+  \item each node chooses a random public node that will act as its wormhole
+  \item it periodically sends to it a sample of itself (an advertisement)
+  \item when a public node receive an advertisement:
+  \begin{itemize}
+    \item it can consume it, adding it to its local view
+    \item it forwards it to a random neighbour
+  \end{itemize}
+\end{itemize}
+
+
+\end{frame}
+
 %-----------------------------------------------------------------------------------------------------------------------------
 \section{WebRTC}
 
@@ -226,12 +252,26 @@ Wormhole Peer Sampling Service!
 
 \end{frame}
 
+\begin{frame}
+\frametitle{Introduction}
+
+\begin{itemize}
+  \item WebRTC is a free and open project 
+  \item It provides browsers and mobile applications with Real-Time Communications (RTC) capabilities via simple APIs
+  \item It enables rich, high-quality RTC applications to be developed for the browser and mobile platforms
+  \item Allow them all to communicate via a common set of protocols
+\end{itemize}
+
+\end{frame}
 
 \begin{frame}\frametitle{Three main tasks}
 \begin{itemize}
-  \item Acquiring audio and video: getting access to the microphone or camera, getting a streaming of media for either of them
-  \item Communicating audio and video: being able to connect to another WebRTC end-point through Internet, and send audio and video stream in real-time
-  \item Communicating generic data: not only audio and video, but for any arbitrary application data
+  \item Acquiring audio and video
+  % getting access to the microphone or camera, getting a streaming of media for either of them
+  \item Communicating audio and video
+  % being able to connect to another WebRTC end-point through Internet, and send audio and video stream in real-time
+  \item Communicating generic data
+  % not only audio and video, but for any arbitrary application data
 \end{itemize}    
 \end{frame}
 
@@ -245,72 +285,34 @@ Wormhole Peer Sampling Service!
 \end{frame}
 
 %-----------------------------------------------------------------------------------------------------------------------------
-\subsection{Signaling}
-
-\begin{frame}\frametitle{Signaling}
-    
-Abstract Signaling
-\begin{itemize}
-  \item Need to exchange ``session description'' objects:
-  \begin{itemize}
-    \item What formats I support, what I want to send
-    \item Network information for peer-to-peer setup
-  \end{itemize}
-  \item Can use any messaging mechanism
-  \item Can use any messaging protocol
-\end{itemize}
-\end{frame}
-
-
-\begin{frame}[c]\frametitle{Signaling}
-
-\begin{figure}
-\centering
-\includegraphics[width=0.9\textwidth]{images/jsep}
-\end{figure}
-
-\end{frame}
-
-%-----------------------------------------------------------------------------------------------------------------------------
-\subsection{STUN and TURN Servers}
-
-\begin{frame}[t]\frametitle{STUN and TURN Servers}
-\begin{figure}
-\centering
-\includegraphics[keepaspectratio=true, width=0.9\textwidth]{images/noSTUNorTURN}
-\end{figure}
-\end{frame}
-
-
-
-\begin{frame}[t]\frametitle{STUN and TURN Servers}
-\begin{figure}
-\centering
-\includegraphics[keepaspectratio=true, width=0.9\textwidth]{images/firewall}
-\end{figure}
-\end{frame}
-
-\begin{frame}[t]\frametitle{STUN and TURN Servers}
-\begin{figure}
-\centering
-\includegraphics[keepaspectratio=true, width=0.9\textwidth]{images/turn}
-\end{figure}
-\end{frame}
-
-
-%-----------------------------------------------------------------------------------------------------------------------------
 \subsection{EasyRTC}
 
 \begin{frame}\frametitle{Back to reality: EasyRTC Framework}
 \begin{itemize}
-  \item Establishing a connection between two peers in WebRTC is not so simple.
+  \item WebRTC is not so simple.
   \item With power comes complexity
   \item To hide that complexity, Priologic\footnote{A team of Canadian software developers. More information: \url{https://www.priologic.com}} has built the EasyRTC framework.
-  \item Tracker
+  \item Tracker: used at bootstrap time and when a node needs a reference of a new peer
 \end{itemize}
 \end{frame}
 
+\subsection{Implementation details}
 
+\begin{frame}
+\frametitle{Implementation details}
+\begin{itemize}
+  \item Two different implementations:
+  \begin{itemize}
+    \item on a real environment (on browsers)
+    \item on a emulation environment
+  \end{itemize}
+  \item \textbf{Hivejs-Framework} provided by the Hive-Streaming company
+  \item Written in \textbf{Typescript}
+  \item Gave us the possibility to choose which environment to use
+\end{itemize}
+
+
+\end{frame}
 %-----------------------------------------------------------------------------------------------------------------------------
 \section{Evaluation}
 
@@ -320,16 +322,31 @@ Abstract Signaling
 \end{frame}
 
 \begin{frame}\frametitle{Environment}
-Emulation environment:
 \begin{itemize}
-  \item $N = 1000$
-  \item $View$ $Size = 50$
-  \item $TTL = 100$
+  \item Emulation environment:
+  \begin{itemize}
+    \item $N = 1000$
+    \item $View$ $Size = 50$
+    \item $TTL = 100$
+  \end{itemize}
+
 \end{itemize}
+
 \end{frame}
 
 %-----------------------------------------------------------------------------------------------------------------------------
 \subsection{Freshness}
+
+\begin{frame}
+\frametitle{Freshness}
+
+\begin{itemize}
+  \item Freshness is the age of the sample
+  \item The delay between the recording of the sample at the source node and its delivery at the terminating node
+  \item Fresher samples are always preferable.
+\end{itemize}
+
+\end{frame}
 
 \begin{frame}
 \frametitle{Average hop count}
@@ -419,7 +436,7 @@ Emulation environment:
   \caption{}
   \label{fig:paper_average_hop_count_failures}
 \end{subfigure}
-\caption{Average hop count in a flash crowd scenario.~\ref{fig:average_hop_count_failures_1impl} represents our result,~\ref{fig:paper_average_hop_count_failures} is the test reported in the paper.}
+\caption{Average hop count in a massive failure scenario.~\ref{fig:average_hop_count_failures_1impl} represents our result,~\ref{fig:paper_average_hop_count_failures} is the test reported in the paper.}
 \label{fig:robustness_hop_count_failures}
 \end{figure}
 
@@ -442,7 +459,7 @@ Emulation environment:
   \caption{}
   \label{fig:paper_average_dead_links}
 \end{subfigure}
-\caption{Average number of dead links in a flash crowd scenario.~\ref{fig:average_dead_links} represents our result,~\ref{fig:paper_average_dead_links} is the test reported in the paper.}
+\caption{Average number of dead links in a massive failure scenario.~\ref{fig:average_dead_links} represents our result,~\ref{fig:paper_average_dead_links} is the test reported in the paper.}
 \label{fig:robustness_dead_links_failures}
 \end{figure}
 
@@ -487,13 +504,18 @@ Emulation environment:
 \begin{frame}
 \frametitle{The idea}
 
-Aggregation is a common name for a set of functions that provide a summary of some global system property. 
-
 \begin{itemize}
+  \item Aggregation is a common name for a set of functions that provide a summary of some global system property
   \item They allow local access to global information in order to simplify the task of controlling, monitoring and optimization in distributed applications
+  \item Examples:
+  \begin{itemize}
+    \item network size
+    \item total free storage
+    \item maximum load
+    \item average uptime
+    \item etc.
+  \end{itemize}
 \end{itemize}
-
-Examples of aggregation functions include network size, total free storage, maximum load, average uptime, etc.
 
 \end{frame}
 
@@ -558,7 +580,7 @@ In a practical setting, this value can characterize any aspect of the node or it
 \begin{figure}[p]
 \centering
 \includegraphics[keepaspectratio=true, width=0.8\linewidth]{images/aggregation_average}
-\caption{Average evolution with error bars.}
+\caption{Average evolution with error bars representing the minimum and maximum values.}
 \label{fig:aggregation_average}
 \end{figure}
 \end{frame}
@@ -615,7 +637,7 @@ In a practical setting, this value can characterize any aspect of the node or it
 \begin{figure}[p]
 \centering
 \includegraphics[keepaspectratio=true, width=0.8\textwidth]{images/counting_average}
-\caption{Average evolution with error bars.}
+\caption{Average evolution with error bars representing the minimum and maximum values.}
 \label{fig:counting_average}
 \end{figure}
 
@@ -636,6 +658,17 @@ In a practical setting, this value can characterize any aspect of the node or it
 %-----------------------------------------------------------------------------------------------------------------------------
 
 \begin{frame}
+\frametitle{References}
+
+  \bibliographystyle{plain}
+  \bibliography{biblio}
+
+
+\end{frame}
+
+%-----------------------------------------------------------------------------------------------------------------------------
+
+\begin{frame}
 \Huge{\centerline{The End}}
 \end{frame}
 
@@ -644,7 +677,7 @@ In a practical setting, this value can characterize any aspect of the node or it
 \appendix
 
 \begin{frame}[fragile] % Need to use the fragile option when verbatim is used in the slide
-\frametitle{The algorithm}
+\frametitle{WPSS: the algorithm}
 
 \begin{algorithm}[H]
   \SetKwProg{Upon}{upon}{ do}{end}
@@ -665,7 +698,7 @@ In a practical setting, this value can characterize any aspect of the node or it
 \end{frame}
 
 \begin{frame}[fragile] % Need to use the fragile option when verbatim is used in the slide
-\frametitle{The algorithm}
+\frametitle{WPSS: the algorithm}
 
 \begin{algorithm}[H]
   \SetKwProg{Upon}{upon}{ do}{end}
@@ -688,7 +721,7 @@ In a practical setting, this value can characterize any aspect of the node or it
 \end{frame}
   
 \begin{frame}
-\frametitle{The algorithm}
+\frametitle{WPSS: the algorithm}
     
 \begin{algorithm}[H]
   \SetKwProg{Upon}{upon}{ do}{end}
@@ -707,5 +740,83 @@ In a practical setting, this value can characterize any aspect of the node or it
 \end{algorithm}
 \end{frame}
 
+
+\begin{frame}
+\frametitle{Aggregation algorithm}
+
+\begin{algorithm}[H]
+  \SetKwProg{Upon}{upon receive}{ do}{end}
+  \SetKwProg{Every}{every}{ do}{end}
+  \SetKwProg{Init}{init}{ do}{end}
+
+  \Init{}{
+    $s_p = random()$
+  }
+
+  \Every{$\delta$}{
+    $q \leftarrow getNeighbour()$\;
+    send $s_p$ to \textit{q}\;
+    $s_q \leftarrow receive(q)$\;
+    $s_p \leftarrow update(s_p,s_q)$\;
+  }
+
+  \Upon{$receive(s_q)$}{
+    send $s_p$ to q\;
+    $s_p \leftarrow update(s_p,s_q)$\;
+  }
+  \caption{Push-pull gossip protocol.}
+\end{algorithm}
+\end{frame}
+
+%-----------------------------------------------------------------------------------------------------------------------------
+
+\begin{frame}\frametitle{Signaling}
+    
+Abstract Signaling
+\begin{itemize}
+  \item Need to exchange ``session description'' objects:
+  \begin{itemize}
+    \item What formats I support, what I want to send
+    \item Network information for peer-to-peer setup
+  \end{itemize}
+  \item Can use any messaging mechanism
+  \item Can use any messaging protocol
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[c]\frametitle{Signaling}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.9\textwidth]{images/jsep}
+\end{figure}
+
+\end{frame}
+
+%-----------------------------------------------------------------------------------------------------------------------------
+
+\begin{frame}[t]\frametitle{STUN and TURN Servers}
+\begin{figure}
+\centering
+\includegraphics[keepaspectratio=true, width=0.9\textwidth]{images/noSTUNorTURN}
+\end{figure}
+\end{frame}
+
+
+
+\begin{frame}[t]\frametitle{STUN and TURN Servers}
+\begin{figure}
+\centering
+\includegraphics[keepaspectratio=true, width=0.9\textwidth]{images/firewall}
+\end{figure}
+\end{frame}
+
+\begin{frame}[t]\frametitle{STUN and TURN Servers}
+\begin{figure}
+\centering
+\includegraphics[keepaspectratio=true, width=0.9\textwidth]{images/turn}
+\end{figure}
+\end{frame}
 
 \end{document} 

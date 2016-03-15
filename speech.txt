@@ -1,0 +1,46 @@
+Good morning everyone, I'm Davide and I'm going to present you the implementation of the Wormhole peer sampling service using the Google WebRTC APIs.
+
+I'll introduce you the WPSS algorithm, then we will see how the WebRTC APIs work, I will show you some tests and results that I obtained and finally we will see an implementation of a gossip based aggregation protocol that is built on top of our peer sampling service.
+
+Starting from the definition, a peer sampling service is a service that runs on all the nodes in a distributed system and provides them with a list of live nodes in the system.
+
+Why we need this type of system? Well, in the past we had that a generic distributed system involved few nodes and they was almost static, so the solution was to provide them with a complete list of nodes present in the network. However, this is no more possible, since a generic distributed system involves a huge amount of nodes, that may join or leave at any given point in time, so having a full view of the network could be not useful: the solution now is to provide all the nodes with a partial view of network, and to keep this list up to date removing nodes that has left with new ones. This is the task of a peer sampling service.
+
+A pss can be implemented as centralized server, however they are not reliable; with random walks, but they work good only with low levels of churn; using gossiping, this is the most widely adopted solution.
+
+However, we have two big problems with these protocols: the first one is that they require a direct communication between peers, however in the open Internet this assumption breaks down because a lot of peers are behind NATs, or firewall. So to handle this, a new version of pss has been created, and they are called gossip based nat-aware pss. 
+
+This protocols however require a lot of communications between private and public nodes: this is a problem because, in general, establish a new connection is a costly procedure! This is where WPSS places itself.
+
+WPSS has the same properties of the other PSSes, but the connection establishment rate is one order of magnitude lower. It has been published in 2013 and it has not been released a final implementation yet, so this is the first one that actually works.
+
+I will briefly explain how it works: the main idea is to divide the service into two layers. The bottom layer should be NAT-friendly, so private nodes are connected only to public nodes, and public nodes are connected to one another. This layer is kept constant replacing broken links with new ones.
+
+The upper layer instead it is built by the algorithm, and the idea is that each node chooses a random public node that will act as its wormhole, and periodically will send to it a sample of itself. When it receive a sample, the public node will have to consume it (adding it in its view if it is not already contained), or will have to forward it to its neighbor. We have also a wormhole renewal timer, that triggers the change of wormhole. 
+
+This is the main idea that is behind WPSS. Now I will introduce WebRTC, and I will give you some details of my implementation.
+
+WebRTC is an API that supports browser-to-browser applications for voice calling, video chat, and file sharing without any plugins. The main tasks of WebRTC are: ......
+These tasks are translated in these three APIs: ....
+
+
+
+
+
+
+We evaluate our implementation and we compared our results with the ones reported in the paper. The emulation environment is the following: we have 1000 nodes, each node has a view that contains 50 nodes (this is the number of nodes that the peer will know), and we set the time to live of the messages to 100.
+
+In the first experiment we want to measure the freshness of the samples. In the x axis we have the ration between the wormhole renewal timer and the wormhole timer, while on the coordinate we have the average hop count. In the figure we can notice that the average hop count and the 90 percentile grow slowly with increasing of $\Delta_{wh}$, which is the wormhole renewal timer, while the 99 percentile grows more quickly. This was expected, since the higher the timer, the more nodes the advertisement will need to traverse in order to find a node which does not already have its sample.
+
+In this experiments we measure the robustness of our implementation in a flash crowd scenario. In this case, a percentage of nodes start at time 0, and the remaining start at minute 6.5. We can see that the average hop count increases with decreasing the number of nodes that join the system at time 0, in fact an advertisement will have to traverse more nodes in order to reach a peer that does not already have that sample. However at time 7, when all the remaining nodes join the system, the average hop count not only stabilizes quickly, but it converges to the same value in all the experiments.
+
+This figure shows the average in-degree of the nodes. As we can see after two minutes in all the experiments the nodes have in average the same in-degree, then it drops significantly at time 6.5, this is in fact expected since a majority of nodes join the network with in-degree equals to 0. However, it recovers quickly (about 1.30 minutes later) and it converges to 50 in all the experiments.
+
+Now we want to measure the robustness of our implementation in case of catastrophic failures, that is, when a large number of peers leave the system at a single instant in time.
+
+In this figure we can notice that all the experiments have the same average hop count until minute 5, then it increases with the increasing of failures. This is expected given the large number of broken links to detect and repair for both the base and wormhole overlays. Notice that the network remains connected even when 80% of the nodes fail.
+
+One important experiment in case of massive failures is to measure the average number of dead links in the views of the peers. What we want to obtain is a system which detect and replace the broken links as fast as possible, and in the same way it has to eliminate all the dead links from the views of the live nodes. This figure shows the result: at time 5 the number of dead links increases (obviously the higher the failures, the higher the number of dead links), but anyway after just one minute all the broken links are successfully deleted from the views (even in the worst case where 80% of the nodes fail), and the average number returns equal to zero.
+
+Now we measure the robustness under different levels of churn. So, every 10 seconds a fixed percentage of nodes leave and join. We can notice that our implementation is robust to all the various levels of churn, even in a better way than the original. This is due to WebRTC: in fact we do not have a failure detector that captures the failure of a node, but is all handled inside the EasyRTC Framework. This give us the possibility to immediately capture the ``failure'' event and replace the broken link with a new one, without undermining the average hop count.
+
