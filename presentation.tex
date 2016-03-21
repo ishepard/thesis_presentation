@@ -21,6 +21,8 @@
 \usepackage[ruled,vlined]{algorithm2e}
 \usepackage{subcaption}
 \usepackage{appendixnumberbeamer}
+\usepackage{animate}
+\usepackage{graphicx}
 
 \mode<presentation> {
 
@@ -79,7 +81,7 @@
 %\setbeamertemplate{footline}[page number] % To replace the footer line in all slides with a simple slide count uncomment this line
 
 %\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from the bottom of all slides uncomment this line
-\setbeamercovered{transparent}
+\setbeamercovered{invisible}
 }
 
 \usepackage{graphicx} % Allows including images
@@ -89,21 +91,42 @@
 %	TITLE PAGE
 %----------------------------------------------------------------------------------------
 
+\begin{document}
+
 \title[WPSS implemented over WebRTC]{The Wormhole Peer Sampling Service implemented over WebRTC} % The short title appears at the bottom of every slide, the full title is only on the title page
 
-\author{Davide Spadini} % Your name
-\institute[Unitn] % Your institution as it will appear on the bottom of every slide, may be shorthand to save space
+\author[Davide Spadini]{
+  \begin{tabular}{c@{\hskip 1.5in}c}
+  Supervisor: & Author:\\
+  Prof. Alberto Montresor & Davide Spadini
+\end{tabular}
+} % Your name
+\institute % Your institution as it will appear on the bottom of every slide, may be shorthand to save space
 {
-University of Trento \\ % Your institution for the title page
-\medskip
-\textit{davide.spadini@studenti.unitn.it} % Your email address
+University of Trento% Your institution for the title page
 }
 \date{\today} % Date, can be changed to a custom date
 
-\begin{document}
-
 \begin{frame}
 \titlepage % Print the title page as the first slide
+\end{frame}
+
+\begin{frame}
+\frametitle{Collaboration}
+
+\begin{columns}
+\column{0.4\textwidth}
+\begin{figure}[t]
+  \includegraphics[keepaspectratio=true,width=3cm]{images/hive-symbol.png}
+\end{figure}
+
+\column{0.6\textwidth}
+\begin{itemize}
+  \item Hive Streaming provides network solutions for media distribution and performance analysis
+  \item It is located in Stockholm (Sweden)
+  \item Peer-based video distribution
+\end{itemize}
+\end{columns}
 \end{frame}
 
 \begin{frame}
@@ -117,10 +140,6 @@ University of Trento \\ % Your institution for the title page
 
 %-----------------------------------------------------------------------------------------------------------------------------
 \section{Wormhole Peer Sampling Service} % Sections can be created in order to organize your presentation into discrete blocks, all sections and subsections are automatically printed in the table of contents as an overview of the talk
-\begin{frame}[c]
-\Huge{\centerline{Wormhole Peer Sampling Service}}
-
-\end{frame}
 
 %-----------------------------------------------------------------------------------------------------------------------------
 \subsection{Introduction}
@@ -128,29 +147,61 @@ University of Trento \\ % Your institution for the title page
 \begin{frame}
 \frametitle{Introduction}
 A peer sampling service (PSS) is a service that runs on all the nodes in a distributed system and provides them with a uniform random sample of live nodes from all nodes in the system, where the sample size is typically much smaller than the system size. 
+
+\begin{columns}[t]
+\column{.7\textwidth}
+\begin{figure}
+\includegraphics[keepaspectratio=true, width=0.7\textwidth]{images/pss.png}
+\end{figure}
+
+\column{.3\textwidth}
+\begin{table}
+\begin{tabular}{cc}
+\toprule
+\textbf{Id} & \textbf{Timestamp}\\
+\midrule
+I & 2\\
+E & 9\\
+N & 12\\
+C & 7\\
+\bottomrule
+\end{tabular}
+\caption{A's View}
+\end{table}
+\end{columns}
+
 \end{frame}
 
-
 \begin{frame}
-\frametitle{P2P networks}
-\begin{columns}[t] % The "c" option specifies centered vertical alignment while the "t" option is used for top vertical alignment
+\frametitle{The idea}
 
-\column{.5\textwidth} % Left column and width
-\textbf{Past}
-\begin{enumerate}
-\item Relatively small size
-\item (Almost) static network
-\item Nodes have {\color{red}{full}} view of the network
-\end{enumerate}
+\begin{figure}
+\includegraphics[keepaspectratio=true, width=0.8\textwidth]{images/old_pss.png}
+\end{figure}
+\end{frame}
 
-\column{.5\textwidth} % Right column and width
-\textbf{Now}
-\begin{enumerate}
-\item Big size
-\item Dynamic network
-\item Nodes have {\color{red}{partial}} view of the network
-\end{enumerate}
-\end{columns}
+\begin{frame}[noframenumbering]
+\frametitle{The idea}
+
+\begin{figure}
+\includegraphics[keepaspectratio=true, width=0.8\textwidth]{images/new_pss_1.png}
+\end{figure}
+\end{frame}
+
+\begin{frame}[noframenumbering]
+\frametitle{The idea}
+
+\begin{figure}
+\includegraphics[keepaspectratio=true, width=0.8\textwidth]{images/new_pss_2.png}
+\end{figure}
+\end{frame}
+
+\begin{frame}[noframenumbering]
+\frametitle{The idea}
+
+\begin{figure}
+\includegraphics[keepaspectratio=true, width=0.8\textwidth]{images/new_pss_3.png}
+\end{figure}
 \end{frame}
 
 
@@ -159,8 +210,8 @@ A peer sampling service (PSS) is a service that runs on all the nodes in a distr
 A PSS can be implemented:
 \begin{itemize}
 	\item as a \textbf{centralized service}: expensive to run reliably
-	\item using \textbf{gossip protocols}: the most widely adopted solution
 	\item using \textbf{random walks}: suitable for stable networks
+  \item using \textbf{gossip protocols}: the most widely adopted solution
 \end{itemize}
 \end{frame}
 
@@ -178,11 +229,9 @@ A PSS can be implemented:
 	\item etc..
 \end{itemize}
 
-\pause
 \textbf{Solution:}
 
 Gossip-based NAT-aware Peer Sampling Service~\cite{gozar}~\cite{croupier}
-
 
 \column{.5\textwidth} % Right column and width
 \textbf{Second problem:}
@@ -190,7 +239,6 @@ Gossip-based NAT-aware Peer Sampling Service~\cite{gozar}~\cite{croupier}
 	\item Require peers to frequently establish network connections and exchange messages with nodes that support direct connectivity
 	\item It is a complex and costly procedure!
 \end{itemize}
-\pause
 \textbf{Solution:}
 
 Wormhole Peer Sampling Service!~\cite{wormhole}
@@ -200,9 +248,9 @@ Wormhole Peer Sampling Service!~\cite{wormhole}
 
 %-----------------------------------------------------------------------------------------------------------------------------
 \subsection{WPSS}
-\frametitle{Wormhole peer sampling service}
 
 \begin{frame}
+\frametitle{Wormhole peer sampling service}
 \begin{itemize}
   \item It has the same properties of other PSSes 
   \begin{itemize}
@@ -214,7 +262,6 @@ Wormhole Peer Sampling Service!~\cite{wormhole}
   \item The connection establishment rate is decreased by one order of magnitude
 	\item Published in 2013
   \item It has not been released a final version yet
-	\pause
 	\item \textbf{Main idea}: to divide the service into two layers
 \end{itemize}
 \end{frame}
@@ -228,29 +275,33 @@ Wormhole Peer Sampling Service!~\cite{wormhole}
 
 \end{frame}
 
-\begin{frame}
+\begin{frame}[noframenumbering]
 \frametitle{Wormhole overlay}
 
-\begin{itemize}
-  \item each node chooses a random public node that will act as its wormhole
-  \item it periodically sends to it a sample of itself (an advertisement)
-  \item when a public node receive an advertisement:
-  \begin{itemize}
-    \item it can consume it, adding it to its local view
-    \item it forwards it to a random neighbour
-  \end{itemize}
-\end{itemize}
-
-
+\begin{figure}
+\includegraphics[keepaspectratio=true, width=\textwidth]{images/wormhole_overlay_1.png}
+\end{figure}
 \end{frame}
+
+\begin{frame}[noframenumbering]
+\frametitle{Wormhole overlay}
+
+\begin{figure}
+\includegraphics[keepaspectratio=true, width=\textwidth]{images/wormhole_overlay_2.png}
+\end{figure}
+\end{frame}
+
+\begin{frame}[noframenumbering]
+\frametitle{Wormhole overlay}
+
+\begin{figure}
+\includegraphics[keepaspectratio=true, width=\textwidth]{images/wormhole_overlay_3.png}
+\end{figure}
+\end{frame}
+
 
 %-----------------------------------------------------------------------------------------------------------------------------
 \section{WebRTC}
-
-\begin{frame}[c]
-\Huge{\centerline{WebRTC}}
-
-\end{frame}
 
 \begin{frame}
 \frametitle{Introduction}
@@ -266,22 +317,13 @@ Wormhole Peer Sampling Service!~\cite{wormhole}
 
 \begin{frame}\frametitle{Three main tasks}
 \begin{itemize}
-  \item Acquiring audio and video
+  \item Acquiring audio and video: \textbf{\textsf{MediaStream} (aka getUserMedia)}
   % getting access to the microphone or camera, getting a streaming of media for either of them
-  \item Communicating audio and video
+  \item Establish a new network connection: \textbf{\textsf{RTCPeerConnection}}
   % being able to connect to another WebRTC end-point through Internet, and send audio and video stream in real-time
-  \item Communicating generic data
+  \item Communicating generic data: \textbf{\textsf{RTCDataChannel}}
   % not only audio and video, but for any arbitrary application data
 \end{itemize}    
-\end{frame}
-
-\begin{frame}\frametitle{Three JavaScript APIs}
-
-\begin{itemize}
-  \item\textbf{\textsf{MediaStream} (aka getUserMedia)}
-  \item\textbf{\textsf{RTCPeerConnection}}
-  \item\textbf{\textsf{RTCDataChannel}}
-\end{itemize}
 \end{frame}
 
 %-----------------------------------------------------------------------------------------------------------------------------
@@ -292,7 +334,6 @@ Wormhole Peer Sampling Service!~\cite{wormhole}
   \item WebRTC is not so simple.
   \item With power comes complexity
   \item To hide that complexity, Priologic\footnote{A team of Canadian software developers. More information: \url{https://www.priologic.com}} has built the EasyRTC framework.
-  \item Tracker: used at bootstrap time and when a node needs a reference of a new peer
 \end{itemize}
 \end{frame}
 
@@ -309,6 +350,7 @@ Wormhole Peer Sampling Service!~\cite{wormhole}
   \item \textbf{Hivejs-Framework} provided by the Hive-Streaming company
   \item Written in \textbf{Typescript}
   \item Gave us the possibility to choose which environment to use
+  \item Tracker: used at bootstrap time and when a node needs a reference of a new peer
 \end{itemize}
 
 
@@ -316,18 +358,12 @@ Wormhole Peer Sampling Service!~\cite{wormhole}
 %-----------------------------------------------------------------------------------------------------------------------------
 \section{Evaluation}
 
-\begin{frame}[c]
-\Huge{\centerline{Evaluation}}
-
-\end{frame}
-
 \begin{frame}\frametitle{Environment}
 \begin{itemize}
   \item Emulation environment:
   \begin{itemize}
     \item $N = 1000$
     \item $View$ $Size = 50$
-    \item $TTL = 100$
   \end{itemize}
 
 \end{itemize}
@@ -355,17 +391,17 @@ Wormhole Peer Sampling Service!~\cite{wormhole}
 \centering
 \begin{subfigure}{.5\textwidth}
   \centering
-  \includegraphics[keepaspectratio=true, width=1\linewidth]{images/average_hop_count}
-  \caption{}
-  \label{fig:my_average_hop_count}
+  \includegraphics[keepaspectratio=true, width=1\linewidth]{images/paper_average_hop_count}
+  \caption{Original paper}
+  \label{fig:paper_average_hop_count}
 \end{subfigure}%
 \begin{subfigure}{.5\textwidth}
   \centering
-  \includegraphics[keepaspectratio=true, width=1\linewidth]{images/paper_average_hop_count}
-  \caption{}
-  \label{fig:paper_average_hop_count}
+  \includegraphics[keepaspectratio=true, width=1\linewidth]{images/average_hop_count}
+  \caption{WebRTC implementation}
+  \label{fig:my_average_hop_count}
 \end{subfigure}
-\caption{Measure of the average hop count, as well as the $90^{th}$ and $99^{th}$ percentile.~\ref{fig:my_average_hop_count} represents our result,~\ref{fig:paper_average_hop_count} is the test reported in the paper.}
+\caption{Measure of the average hop count, as well as the $90^{th}$ and $99^{th}$ percentile.~\ref{fig:paper_average_hop_count} is the test reported in the paper while~\ref{fig:my_average_hop_count} represents our result.}
 \label{fig:freshness}
 \end{figure}
 \end{frame}
@@ -373,24 +409,24 @@ Wormhole Peer Sampling Service!~\cite{wormhole}
 %-----------------------------------------------------------------------------------------------------------------------------
 \subsection{Robustness}
 
-\begin{frame}
+\begin{frame}[t]
 \frametitle{Hop count in a flash crowd scenario}
 
 \begin{figure}
 \centering
 \begin{subfigure}{.5\textwidth}
   \centering
-  \includegraphics[keepaspectratio=true, width=1\linewidth]{images/average_hop_count_flash_crowd_1impl}
-  \caption{}
-  \label{fig:average_hop_count_flash_crowd_1impl}
+  \includegraphics[keepaspectratio=true, width=1\linewidth]{images/paper_average_hop_count_flash_crowd}
+  \caption{Original paper}
+  \label{fig:paper_average_hop_count_flash_crowd}
 \end{subfigure}%
 \begin{subfigure}{.5\textwidth}
   \centering
-  \includegraphics[keepaspectratio=true, width=1\linewidth]{images/paper_average_hop_count_flash_crowd}
-  \caption{}
-  \label{fig:paper_average_hop_count_flash_crowd}
+  \includegraphics[keepaspectratio=true, width=1\linewidth]{images/average_hop_count_flash_crowd_1impl}
+  \caption{WebRTC implementation}
+  \label{fig:average_hop_count_flash_crowd_1impl}
 \end{subfigure}
-\caption{Average hop count in a flash crowd scenario.~\ref{fig:average_hop_count_flash_crowd_1impl} represents our result,~\ref{fig:paper_average_hop_count_flash_crowd} is the test reported in the paper.}
+\caption{Average hop count in a flash crowd scenario.~\ref{fig:paper_average_hop_count_flash_crowd} is the test reported in the paper while~\ref{fig:average_hop_count_flash_crowd_1impl} represents our result.}
 \label{fig:robustness_hop_count_flash_crowd}
 \end{figure}
 
@@ -403,17 +439,17 @@ Wormhole Peer Sampling Service!~\cite{wormhole}
 \centering
 \begin{subfigure}{.5\textwidth}
   \centering
-  \includegraphics[keepaspectratio=true, width=1\linewidth]{images/average_indegree}
-  \caption{}
-  \label{fig:average_indegree}
+  \includegraphics[keepaspectratio=true, width=1\linewidth]{images/paper_average_indegree}
+  \caption{Original paper}
+  \label{fig:paper_average_indegree}
 \end{subfigure}%
 \begin{subfigure}{.5\textwidth}
   \centering
-  \includegraphics[keepaspectratio=true, width=1\linewidth]{images/paper_average_indegree}
-  \caption{}
-  \label{fig:paper_average_indegree}
+  \includegraphics[keepaspectratio=true, width=1\linewidth]{images/average_indegree}
+  \caption{WebRTC implementation}
+  \label{fig:average_indegree}
 \end{subfigure}
-\caption{Average in-degree in a flash crowd scenario.~\ref{fig:average_indegree} represents our result,~\ref{fig:paper_average_indegree} is the test reported in the paper.}
+\caption{Average in-degree in a flash crowd scenario.~\ref{fig:paper_average_indegree} is the test reported in the paper while~\ref{fig:average_indegree} represents our result.}
 \label{fig:robustness_indegree_flash_crowd}
 \end{figure}
 
@@ -426,17 +462,17 @@ Wormhole Peer Sampling Service!~\cite{wormhole}
 \centering
 \begin{subfigure}{.5\textwidth}
   \centering
-  \includegraphics[keepaspectratio=true, width=1\linewidth]{images/average_hop_count_failures_1impl}
-  \caption{}
-  \label{fig:average_hop_count_failures_1impl}
+  \includegraphics[keepaspectratio=true, width=1\linewidth]{images/paper_average_hop_count_failures}
+  \caption{Original paper}
+  \label{fig:paper_average_hop_count_failures}
 \end{subfigure}%
 \begin{subfigure}{.5\textwidth}
   \centering
-  \includegraphics[keepaspectratio=true, width=1\linewidth]{images/paper_average_hop_count_failures}
-  \caption{}
-  \label{fig:paper_average_hop_count_failures}
+  \includegraphics[keepaspectratio=true, width=1\linewidth]{images/average_hop_count_failures_1impl}
+  \caption{WebRTC implementation}
+  \label{fig:average_hop_count_failures_1impl}
 \end{subfigure}
-\caption{Average hop count in a massive failure scenario.~\ref{fig:average_hop_count_failures_1impl} represents our result,~\ref{fig:paper_average_hop_count_failures} is the test reported in the paper.}
+\caption{Average hop count in a massive failure scenario.~\ref{fig:paper_average_hop_count_failures} is the test reported in the paper while~\ref{fig:average_hop_count_failures_1impl} represents our result.}
 \label{fig:robustness_hop_count_failures}
 \end{figure}
 
@@ -449,17 +485,17 @@ Wormhole Peer Sampling Service!~\cite{wormhole}
 \centering
 \begin{subfigure}{.5\textwidth}
   \centering
-  \includegraphics[keepaspectratio=true, width=1\linewidth]{images/average_dead_links}
-  \caption{}
-  \label{fig:average_dead_links}
+  \includegraphics[keepaspectratio=true, width=1\linewidth]{images/paper_average_dead_links}
+  \caption{Original paper}
+  \label{fig:paper_average_dead_links}
 \end{subfigure}%
 \begin{subfigure}{.5\textwidth}
   \centering
-  \includegraphics[keepaspectratio=true, width=1\linewidth]{images/paper_average_dead_links}
-  \caption{}
-  \label{fig:paper_average_dead_links}
+  \includegraphics[keepaspectratio=true, width=1\linewidth]{images/average_dead_links}
+  \caption{WebRTC implementation}
+  \label{fig:average_dead_links}
 \end{subfigure}
-\caption{Average number of dead links in a massive failure scenario.~\ref{fig:average_dead_links} represents our result,~\ref{fig:paper_average_dead_links} is the test reported in the paper.}
+\caption{Average number of dead links in a massive failure scenario.~\ref{fig:paper_average_dead_links} is the test reported in the paper while~\ref{fig:average_dead_links} represents our result.}
 \label{fig:robustness_dead_links_failures}
 \end{figure}
 
@@ -475,17 +511,17 @@ Wormhole Peer Sampling Service!~\cite{wormhole}
 \centering
 \begin{subfigure}{.5\textwidth}
   \centering
-  \includegraphics[keepaspectratio=true, width=1\linewidth]{images/average_hop_count_churn_1impl}
-  \caption{}
-  \label{fig:average_hop_count_churn_1impl}
+  \includegraphics[keepaspectratio=true, width=1\linewidth]{images/paper_average_hop_count_churn}
+  \caption{Original paper}
+  \label{fig:paper_average_hop_count_churn}
 \end{subfigure}%
 \begin{subfigure}{.5\textwidth}
   \centering
-  \includegraphics[keepaspectratio=true, width=1\linewidth]{images/paper_average_hop_count_churn}
-  \caption{}
-  \label{fig:paper_average_hop_count_churn}
+  \includegraphics[keepaspectratio=true, width=1\linewidth]{images/average_hop_count_churn_1impl}
+  \caption{WebRTC implementation}
+  \label{fig:average_hop_count_churn_1impl}
 \end{subfigure}
-\caption{Average hop count under varying levels of churn. ~\ref{fig:average_hop_count_churn_1impl} represents our result,~\ref{fig:paper_average_hop_count_churn} is the test reported in the paper.}
+\caption{Average hop count under varying levels of churn.~\ref{fig:paper_average_hop_count_churn} is the test reported in the paper while~\ref{fig:average_hop_count_churn_1impl} represents our result.}
 \label{fig:robustness_hop_count_churn}
 \end{figure}
 
@@ -493,13 +529,6 @@ Wormhole Peer Sampling Service!~\cite{wormhole}
 
 %-----------------------------------------------------------------------------------------------------------------------------
 \section{Gossip-based aggregation protocol}
-
-\begin{frame}[c]
-
-\Huge{\centerline{Gossip-based aggregation protocol}}
-
-\end{frame}
-
 
 \begin{frame}
 \frametitle{The idea}
@@ -520,18 +549,10 @@ Wormhole Peer Sampling Service!~\cite{wormhole}
 \end{frame}
 
 \begin{frame}
-\frametitle{The idea}
+\frametitle{Our case}
+
 \begin{itemize}
   \item The core of the protocol is a simple gossip-based communication scheme
-  \item During this communication the nodes update their local approximate values
-  \item All the approximate values in the system will quickly converge to the desired aggregate value
-\end{itemize}
-\end{frame}
-
-\begin{frame}
-\frametitle{Our case}
-We consider the same network of the tests.
-\begin{itemize}
   \item Each node in the network holds a numeric value
   \item We want to calculate the average among the nodes
 \end{itemize}
@@ -544,34 +565,10 @@ In a practical setting, this value can characterize any aspect of the node or it
 \frametitle{First case}
 
 \begin{itemize}
+  \item We consider the same network of the tests.
   \item All the nodes start with a random value between 0 and 1
   \item The expected output is the average over all these local values.
 \end{itemize}
-\end{frame}
-
-
-\begin{frame}
-\frametitle{First case result}
-\begin{table}
-\begin{tabular}{l l l}
-\toprule
-\textbf{Round} & \textbf{Minimum} & \textbf{Maximum}\\
-\midrule
-1 & 0.018574914802 & 0.996774217487 \\
-2 & 0.070221341605 & 0.915147169418 \\
-3 & 0.230152943376 & 0.833776234641 \\
-4 & 0.289588175545 & 0.709077004544 \\
-5 & 0.403064215889 & 0.597074271548 \\
-6 & 0.450672692662 & 0.554978304631 \\
-... & ... & ... \\
-17  & 0.500661439413 & 0.500804356814 \\
-18  & 0.500675542521 & 0.500750820268 \\
-19  & 0.500703691477 & 0.5007381087 \\
-20  & 0.500709860355 & 0.500727408936 \\
-\bottomrule
-\end{tabular}
-\caption{Global average, minimum and maximum in each round.}
-\end{table}
 \end{frame}
 
 \begin{frame}
@@ -601,35 +598,11 @@ In a practical setting, this value can characterize any aspect of the node or it
 \frametitle{Second case}
 
 \begin{itemize}
+  \item We consider the same network of the tests.
   \item One node starts with 1 and the others with 0.
   \item The expected output is $1/N$, and if we do the inverse we obtain the total number of nodes present in the network (\textbf{Counting protocol}).
 \end{itemize}
 \end{frame}
-
-\begin{frame}
-\frametitle{Second case result}
-\begin{table}
-\begin{tabular}{l l}
-\toprule
-\textbf{Round} & \textbf{Average}\\
-\midrule
-1 & 0.0012617200674100 \\
-2 & 0.0015042163745800 \\
-3 & 0.0013683466120000 \\
-4 & 0.0011746396263000 \\
-5 & 0.0009807697464010 \\
-6 & 0.0010497184912800 \\
-... & ... \\
-17  & 0.0010094031404220 \\
-18  & 0.0010013031404250 \\
-19  & 0.0010014001404220 \\
-20  & 0.0010014031404250 \\
-\bottomrule
-\end{tabular}
-\caption{Global average in each round.}
-\end{table}
-\end{frame}
-
 
 \begin{frame}
 \frametitle{Second case}
@@ -657,18 +630,17 @@ In a practical setting, this value can characterize any aspect of the node or it
 \end{frame}
 %-----------------------------------------------------------------------------------------------------------------------------
 
-\begin{frame}
+\begin{frame}[noframenumbering]
 \frametitle{References}
 
   \bibliographystyle{plain}
   \bibliography{biblio}
 
-
 \end{frame}
 
 %-----------------------------------------------------------------------------------------------------------------------------
 
-\begin{frame}
+\begin{frame}[noframenumbering]
 \Huge{\centerline{The End}}
 \end{frame}
 
@@ -818,5 +790,54 @@ Abstract Signaling
 \includegraphics[keepaspectratio=true, width=0.9\textwidth]{images/turn}
 \end{figure}
 \end{frame}
+
+\begin{frame}
+\frametitle{First case result}
+\begin{table}
+\begin{tabular}{l l l}
+\toprule
+\textbf{Round} & \textbf{Minimum} & \textbf{Maximum}\\
+\midrule
+1 & 0.018574914802 & 0.996774217487 \\
+2 & 0.070221341605 & 0.915147169418 \\
+3 & 0.230152943376 & 0.833776234641 \\
+4 & 0.289588175545 & 0.709077004544 \\
+5 & 0.403064215889 & 0.597074271548 \\
+6 & 0.450672692662 & 0.554978304631 \\
+... & ... & ... \\
+17  & 0.500661439413 & 0.500804356814 \\
+18  & 0.500675542521 & 0.500750820268 \\
+19  & 0.500703691477 & 0.5007381087 \\
+20  & 0.500709860355 & 0.500727408936 \\
+\bottomrule
+\end{tabular}
+\caption{Global average, minimum and maximum in each round.}
+\end{table}
+\end{frame}
+
+\begin{frame}
+\frametitle{Second case result}
+\begin{table}
+\begin{tabular}{l l}
+\toprule
+\textbf{Round} & \textbf{Average}\\
+\midrule
+1 & 0.0012617200674100 \\
+2 & 0.0015042163745800 \\
+3 & 0.0013683466120000 \\
+4 & 0.0011746396263000 \\
+5 & 0.0009807697464010 \\
+6 & 0.0010497184912800 \\
+... & ... \\
+17  & 0.0010094031404220 \\
+18  & 0.0010013031404250 \\
+19  & 0.0010014001404220 \\
+20  & 0.0010014031404250 \\
+\bottomrule
+\end{tabular}
+\caption{Global average in each round.}
+\end{table}
+\end{frame}
+
 
 \end{document} 
